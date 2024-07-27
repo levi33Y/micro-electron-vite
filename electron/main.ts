@@ -1,15 +1,61 @@
-import {BrowserWindow,app} from "electron"
+import {BrowserWindow,ipcMain} from "electron"
+import path from "path";
 
-const createWindow = () =>
+let win:Electron.BrowserWindow = null
+
+export const createWindow = () =>
 {
-    const win = new BrowserWindow({ width: 800, height: 600 })
+    win = new BrowserWindow({
+        width: 800, height: 600,
+        webPreferences: {
+            nodeIntegration: true,
+            preload: path.resolve(__dirname, 'preload.js')
+        },
+    })
 
-    win.loadFile('./index.html')
+    win.loadURL("http://localhost:8888")
 
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
+
+    mainWindowListenEvents()
 }
 
-app.on('ready', () => {
-    createWindow()
-})
+export const  mainWindowListenEvents = () =>  {
+    ipcMain.on('win-min', () => {
+        mainWindowIsExist() && win.minimize()
+    })
+
+    ipcMain.on('win-max', () => {
+
+        console.log(mainWindowIsExist)
+        if (mainWindowIsExist()) {
+            win.maximize()
+            win.webContents.send('mainWindowIsMax', true)
+        }
+    })
+
+    ipcMain.on('win-restore', () => {
+        if (mainWindowIsExist()) {
+            win.unmaximize()
+            win.webContents.send('mainWindowIsMax', false)
+        }
+    })
+
+    ipcMain.on('win-close', () => {
+        mainWindowIsExist() && win.hide()
+    })
+
+    ipcMain.on('win-open-devtool', () => {
+        mainWindowIsExist() && win.webContents.openDevTools()
+    })
+}
+
+export const mainWindowIsExist = () => {
+    return win && !win.isDestroyed()
+}
+
+export const getMainWindow = () => {
+    return win
+}
+
 
