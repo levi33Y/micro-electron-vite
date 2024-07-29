@@ -1,6 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron"
-
-window.ipcRenderer = ipcRenderer
+import {contextBridge, ipcRenderer} from "electron"
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
     send: (channel, ...args) => {

@@ -1,7 +1,7 @@
-import {BrowserWindow,ipcMain} from "electron"
-import path from "path";
+import {BrowserWindow, ipcMain} from "electron"
+import * as path from "node:path";
 
-let win:Electron.BrowserWindow = null
+let win: Electron.BrowserWindow | null = null
 
 export const createWindow = () =>
 {
@@ -22,31 +22,33 @@ export const createWindow = () =>
 
 export const  mainWindowListenEvents = () =>  {
     ipcMain.on('win-min', () => {
-        mainWindowIsExist() && win.minimize()
+        mainWindowIsExist() && win?.minimize()
     })
 
     ipcMain.on('win-max', () => {
 
         console.log(mainWindowIsExist)
         if (mainWindowIsExist()) {
-            win.maximize()
-            win.webContents.send('mainWindowIsMax', true)
+            win?.maximize()
+
+            win?.webContents.send('mainWindowIsMax', true)
         }
     })
 
     ipcMain.on('win-restore', () => {
         if (mainWindowIsExist()) {
-            win.unmaximize()
-            win.webContents.send('mainWindowIsMax', false)
+            win?.unmaximize()
+
+            win?.webContents.send('mainWindowIsMax', false)
         }
     })
 
     ipcMain.on('win-close', () => {
-        mainWindowIsExist() && win.hide()
+        mainWindowIsExist() && win?.hide()
     })
 
     ipcMain.on('win-open-devtool', () => {
-        mainWindowIsExist() && win.webContents.openDevTools()
+        mainWindowIsExist() && win?.webContents.openDevTools()
     })
 }
 
