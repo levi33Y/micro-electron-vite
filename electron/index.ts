@@ -1,5 +1,5 @@
 import {app} from "electron"
-import {initMenu,tray} from "./Tray";
+import {initMenu,menu} from "./menu";
 import {createWindow} from "./main";
 
 app.on('ready', () => {

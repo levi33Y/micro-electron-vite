@@ -1,7 +1,7 @@
 import {app, Menu, nativeImage, Tray} from "electron"
 import {getMainWindow, mainWindowIsExist} from "./main";
 
-export let tray:Electron.Tray | null = null
+export let menu:Electron.Tray | null = null
 
 const contextMenuItems = [
     {
@@ -28,9 +28,9 @@ export const initTray = () => {
 
     const trayMenu = Menu.buildFromTemplate(contextMenuItems)
 
-    tray = new Tray(iconPath)
+    menu = new Tray(iconPath)
 
-    tray.setContextMenu(trayMenu)
+    menu.setContextMenu(trayMenu)
 
     // tray.setToolTip('This is my toolTip')
 
